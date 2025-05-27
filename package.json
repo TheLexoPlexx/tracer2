@@ -1,0 +1,23 @@
+{
+  "name": "tracer2",
+  "version": "0.1.0",
+  "packageManager": "bun@1.2.10",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "prisma:migrate": "turbo prisma:migrate"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  },
+  "dependencies": {
+    "turbo": "^2.5.3"
+  }
+}

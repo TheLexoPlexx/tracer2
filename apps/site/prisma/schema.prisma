@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Project {
+  id             String          @id @default(cuid())
+  name           String
+  description    String?
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  TracerNodes    TracerNode[]
+  configurations Configuration[]
+}
+
+model Colour {
+  id                     String                   @id @default(cuid())
+  display_name           String
+  short_name             String
+  red                    Int
+  green                  Int
+  blue                   Int
+  cables                 Cable[]
+  commonCableSignalTypes CommonCableSignalTypes[]
+}
+
+model SignalType {
+  id                     String                   @id @default(cuid())
+  name                   String
+  cable                  Cable[]
+  commonCableSignalTypes CommonCableSignalTypes[]
+}
+
+// Connections between TracerNodes
+model Cable {
+  id               String        @id @default(cuid())
+  cross_section    Float
+  colour           Colour[]
+  loom_id          String?
+  loom             Loom?         @relation(fields: [loom_id], references: [id])
+  signal_type_id   String?
+  signal_type      SignalType?   @relation(fields: [signal_type_id], references: [id])
+  TracerNode_id    String?
+  connections      Connection[]
+  terminal_type_id String?
+  terminal_type    TerminalType? @relation(fields: [terminal_type_id], references: [id])
+}
+
+model CommonCableSignalTypes {
+  id             String     @id @default(cuid())
+  name           String
+  colour_id      String
+  colour         Colour     @relation(fields: [colour_id], references: [id])
+  signal_type_id String
+  signal_type    SignalType @relation(fields: [signal_type_id], references: [id])
+}
+
+// A Descriptor to identify a groub of Cables and their physical location
+model Loom {
+  id             String  @id @default(cuid())
+  name           String
+  original_label String
+  cable          Cable[]
+}
+
+// A Component, might be the ECU or a sensor or just a connector
+model Component {
+  id                   String       @id @default(cuid())
+  name                 String
+  original_part_number String
+  original_label       String
+  pin_count            Int
+  TracerNodes          TracerNode[]
+  //image?
+}
+
+// A TracerNode, An actual TracerNode in the system, differentiated from the component in case multiple of the same component are used in the system
+model TracerNode {
+  id               String         @id @default(cuid())
+  name             String
+  component_id     String
+  component        Component      @relation(fields: [component_id], references: [id])
+  configuration_id String?
+  configuration    Configuration? @relation(fields: [configuration_id], references: [id])
+  connections      Connection[]
+  project_id       String
+  project          Project        @relation(fields: [project_id], references: [id])
+}
+
+model Connection {
+  id               String        @id @default(cuid())
+  TracerNode_id    String
+  TracerNode       TracerNode    @relation(fields: [TracerNode_id], references: [id])
+  pin_number       Int
+  configuration_id String
+  configuration    Configuration @relation(fields: [configuration_id], references: [id])
+  cable_id         String
+  cable            Cable         @relation(fields: [cable_id], references: [id])
+}
+
+model Configuration {
+  id          String       @id @default(cuid())
+  name        String
+  default     Boolean
+  project_id  String
+  project     Project      @relation(fields: [project_id], references: [id])
+  TracerNodes TracerNode[]
+  connections Connection[]
+}
+
+model TerminalType {
+  id     String  @id @default(cuid())
+  name   String
+  number Int
+  cable  Cable[]
+}

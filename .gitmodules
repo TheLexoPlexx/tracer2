@@ -1,0 +1,6 @@
+[submodule "apps/site/packages/infinite-canvas"]
+	path = apps/site/packages/infinite-canvas
+	url = git@github.com:TheLexoPlexx/infinite-canvas.git
+[submodule "packages/infinite-canvas"]
+	path = packages/infinite-canvas
+	url = git@github.com:TheLexoPlexx/infinite-canvas.git
