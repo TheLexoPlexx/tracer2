@@ -37,6 +37,7 @@ export function Canvas(props: {
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 
   // TODO: Modal oder Drawer öffnen mit Component Library
+  // Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/1
   // - von dort aus dann Bauteil auswählen oder anlegen
 
   // schauen ob in ElsaWin Komponenten auch an der Seite verbindungen haben können
