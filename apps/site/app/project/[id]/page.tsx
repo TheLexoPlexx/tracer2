@@ -17,9 +17,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     return (
       <Container maxWidth="md" sx={{ mt: 10 }}>
         <Alert severity="error">
-          <AlertTitle>
-            Project not found
-          </AlertTitle>
+          <AlertTitle>Projekt nicht gefunden</AlertTitle>
         </Alert>
       </Container>
     )

@@ -20,7 +20,7 @@ export function ClientLayout(props: { children: React.ReactNode, id: string }) {
     );
 
     return () => {
-      setAppbarActions([]);
+      // setAppbarActions([]);
     };
   }, [setAppbarActions]);
 

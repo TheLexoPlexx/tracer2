@@ -17,6 +17,8 @@ export function Canvas(props: {
 
   useEffect(() => {
     setAppbarTitle(props.project.name);
+
+    //FIXME: This doesn't actually work. Not on first render or anything.
     addAppbarAction(
       {
         id: "project-settings",
@@ -27,12 +29,21 @@ export function Canvas(props: {
     );
 
     return () => {
-      setAppbarActions([]);
+      // setAppbarActions([]);
       setAppbarTitle();
     };
   }, [setAppbarActions]);
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
+
+  // TODO: Modal oder Drawer öffnen mit Component Library
+  // - von dort aus dann Bauteil auswählen oder anlegen
+
+  // schauen ob in ElsaWin Komponenten auch an der Seite verbindungen haben können
+  // in der Node anzeigen, wie viel Verbindungen es gibt und wie viele noch frei sind
+  // bei Klick auf Node, anzeigen, welche Verbindungen wohin gehen also Kabelfarben etc. und Button für die angeschlossene Komponente
+  // die Verbindungen anklickbar machen, sodass diese Verbindung gehighlighted wird
+
 
   return (
     <ReactInfiniteCanvas
@@ -52,7 +63,7 @@ export function Canvas(props: {
               </pre>
             ))
             :
-            <Tooltip title="Add First Node">
+            <Tooltip title="Erstes Bauteil hinzufügen">
               <Button variant="contained" color="primary">
                 <Add />
               </Button>
