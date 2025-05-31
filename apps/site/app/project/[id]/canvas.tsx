@@ -11,6 +11,8 @@ import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canv
 import { SearchBar } from "./searchBar";
 import { commands } from "@/lib/commands";
 
+import Link from "next/link";
+
 export function Canvas(props: {
   project: Project,
   nodes: (TracerNode & { component: Component })[]
@@ -49,7 +51,6 @@ export function Canvas(props: {
   // bei Klick auf Node, anzeigen, welche Verbindungen wohin gehen also Kabelfarben etc. und Button für die angeschlossene Komponente
   // die Verbindungen anklickbar machen, sodass diese Verbindung gehighlighted wird
 
-
   return (
     <ReactInfiniteCanvas
       ref={canvasRef}
@@ -70,9 +71,7 @@ export function Canvas(props: {
             ))
             :
             <Tooltip title="Erste Node hinzufügen">
-              <Button variant="contained" color="primary" onClick={() => {
-                commands["new-node"].execute()
-              }}>
+              <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + commands["new-node"].pathname}>
                 <Add />
               </Button>
             </Tooltip>

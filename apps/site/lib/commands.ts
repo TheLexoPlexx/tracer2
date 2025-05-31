@@ -1,6 +1,7 @@
 "use client"
 
 import { Command } from "@/hooks/useCommandPalette";
+import { usePathname, useRouter } from "next/navigation";
 
 export type CommandId = "new-node" | "component-library";
 
@@ -8,9 +9,7 @@ export const commands: Record<string, Command> = {
   "new-node": {
     name: "Neue Node",
     description: "Erstellt eine neue Node",
-    execute: async () => {
-      console.log("new-node");
-    }
+    pathname: "/new-node"
   },
   "component-library": {
     name: "Komponentenbibliothek",

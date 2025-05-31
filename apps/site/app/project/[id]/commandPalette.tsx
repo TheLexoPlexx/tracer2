@@ -5,12 +5,15 @@ import { Dialog, List, ListItem, ListItemButton, ListItemText, Paper, Stack, Tex
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { commands as initialCommands } from "@/lib/commands";
 import { SwapVert } from "@mui/icons-material";
-
+import { useRouter, usePathname } from "next/navigation";
 export function CommandPalette() {
   const [search, setSearch] = useState("");
   const cp = useCommandPalette();
   const [selectedCommandIndex, setSelectedCommandIndex] = useState<number>(-1);
   const selectedItemRef = useRef<HTMLLIElement | null>(null);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Memoize filtered commands
   const filteredCommands = useMemo(() => {
@@ -59,8 +62,15 @@ export function CommandPalette() {
   }, [selectedCommandIndex]);
 
   const handleCommandExecution = (command: Command) => {
-    command.execute()
     cp.setOpen(false); // This will trigger the useEffect for !cp.open to reset search/selection
+
+    if (command.execute) {
+      command.execute()
+    } else if (command.pathname) {
+      router.push(pathname + command.pathname)
+    } else {
+      console.error("Command has no execute or pathname")
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {

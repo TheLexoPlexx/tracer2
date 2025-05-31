@@ -1,8 +1,6 @@
-import { AlertTitle, Alert, Box, Button, ButtonGroup, Container, Stack } from "@mui/material";
+import { AlertTitle, Alert, Box, Container, Stack } from "@mui/material";
 import { Canvas } from "./canvas";
 import prisma from "@/lib/prismadb"
-import { Add, Hub } from "@mui/icons-material";
-import { commands } from "@/lib/commands";
 import { PageButtonGroup } from "./pageButtonGroup";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -48,8 +46,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <PageButtonGroup />
-
+        <PageButtonGroup id={id} />
       </Stack>
 
       <Box sx={{ width: "100%", height: "100%" }}>

@@ -5,7 +5,8 @@ import { ReactNode, useState, createContext, useContext, useCallback, useEffect,
 export interface Command {
   name: string;
   description: string;
-  execute: () => void;
+  execute?: () => void;
+  pathname?: string;
 }
 
 export interface CommandPaletteContextType {
