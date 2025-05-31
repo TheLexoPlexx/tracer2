@@ -1,12 +1,14 @@
 "use client"
 
 import { useAppbar, AppbarActionPosition } from "@/hooks/useAppbar";
+import { useCommandPalette } from "@/hooks/useCommandPalette";
 import { Add, Settings } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import { Component, Project, TracerNode } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
+import { SearchBar } from "./searchBar";
 
 export function Canvas(props: {
   project: Project,
@@ -15,8 +17,10 @@ export function Canvas(props: {
 
   const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
 
+  const { setOpen } = useCommandPalette();
+
   useEffect(() => {
-    setAppbarTitle(props.project.name);
+    setAppbarTitle(props.project.name, <SearchBar setOpen={setOpen} />)
 
     addAppbarAction(
       {
@@ -31,7 +35,7 @@ export function Canvas(props: {
       clearAppbarActions();
       setAppbarTitle();
     };
-  }, [clearAppbarActions]);
+  }, [clearAppbarActions, props.project.name, setOpen]);
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Appbar() {
 
-  const { appbarActions, appbarTitle } = useAppbar();
+  const { appbarActions, appbarTitle, appbarTitleElement } = useAppbar();
   const iconElevation = 10;
 
   return (
@@ -20,7 +20,8 @@ export default function Appbar() {
           }
         </Stack>
         <Toolbar>
-          <Typography variant="h6" sx={{ fontWeight: "bold", fontStyle: "italic" }}>{appbarTitle.toUpperCase()}</Typography>
+          {appbarTitleElement}
+          {!appbarTitleElement && <Typography variant="h6" sx={{ fontWeight: "bold", fontStyle: "italic" }}>{appbarTitle.toUpperCase()}</Typography>}
         </Toolbar>
         <Stack direction="row" alignItems="center" gap={2} sx={{ mr: 1, zIndex: (theme) => theme.zIndex.appBar + iconElevation }}>
           {

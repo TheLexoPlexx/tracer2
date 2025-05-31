@@ -21,7 +21,8 @@ export interface AppbarContextType {
   addAppbarAction: (action: AppbarAction) => void;
   clearAppbarActions: () => void;
   appbarTitle: string;
-  setAppbarTitle: (title?: string) => void;
+  appbarTitleElement: ReactNode | null;
+  setAppbarTitle: (title?: string, element?: ReactNode) => void;
 }
 
 const AppbarContext = createContext<AppbarContextType | undefined>(undefined);
@@ -29,6 +30,7 @@ const AppbarContext = createContext<AppbarContextType | undefined>(undefined);
 export function AppbarProvider(props: { children: ReactNode }) {
   const [appbarActions, setAppbarActions] = useState<AppbarAction[]>([]);
   const [appbarTitle, setAppbarTitleState] = useState<string>("Tracer");
+  const [appbarTitleElement, setAppbarTitleElement] = useState<ReactNode | null>(null);
 
   const addAppbarAction = useCallback((action: AppbarAction) => {
     setAppbarActions(prevActions => [...prevActions, action]);
@@ -38,16 +40,26 @@ export function AppbarProvider(props: { children: ReactNode }) {
     setAppbarActions([]);
   }, []);
 
-  const setAppbarTitle = useCallback((title?: string) => {
-    if (title) {
-      setAppbarTitleState(title);
-    } else {
+  const setAppbarTitle = useCallback((title?: string, element?: ReactNode) => {
+    if (!title && !element) {
       setAppbarTitleState("Tracer");
+      setAppbarTitleElement(null);
+    } else {
+      if (title) {
+        setAppbarTitleState(title);
+      } else {
+        setAppbarTitleState("Tracer");
+      }
+      if (element) {
+        setAppbarTitleElement(element);
+      } else {
+        setAppbarTitleElement(null);
+      }
     }
   }, []);
 
   return (
-    <AppbarContext.Provider value={{ appbarActions, setAppbarActions, addAppbarAction, clearAppbarActions, appbarTitle, setAppbarTitle }}>
+    <AppbarContext.Provider value={{ appbarActions, setAppbarActions, addAppbarAction, clearAppbarActions, appbarTitle, appbarTitleElement, setAppbarTitle }}>
       {props.children}
     </AppbarContext.Provider>
   );

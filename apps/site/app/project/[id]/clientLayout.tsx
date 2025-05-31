@@ -1,7 +1,7 @@
 "use client"
 
 import { AppbarActionPosition, useAppbar } from "@/hooks/useAppbar";
-import { ArrowBack } from "@mui/icons-material";
+import { Home } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { useEffect } from "react";
 import { CommandPaletteProvider } from "@/hooks/useCommandPalette";
@@ -15,7 +15,7 @@ export function ClientLayout(props: { children: React.ReactNode, id: string }) {
     addAppbarAction(
       {
         id: "project-back",
-        icon: <Tooltip title="Zurück"><ArrowBack sx={{ color: 'white' }} /></Tooltip>,
+        icon: <Tooltip title="Zurück"><Home sx={{ color: 'white' }} /></Tooltip>,
         position: AppbarActionPosition.LEFT,
         href: "/"
       }
