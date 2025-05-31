@@ -9,8 +9,10 @@ export default async function Layout(props: {
   }>
 }) {
 
+  const { id } = await props.params;
+
   return (
-    <ClientLayout>
+    <ClientLayout id={id}>
       {props.children}
       {props.modal}
     </ClientLayout>

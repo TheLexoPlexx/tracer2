@@ -7,6 +7,7 @@ export interface Command {
   description: string;
   execute?: () => void;
   pathname?: string;
+  directUrl?: string;
 }
 
 export interface CommandPaletteContextType {
@@ -15,7 +16,7 @@ export interface CommandPaletteContextType {
   commands: Command[];
   setCommands: (commands: Command[]) => void;
   addCommands: (commands: Command[]) => void;
-  clearCommands: () => void;
+  removeCommand: (commandName: string) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
@@ -30,8 +31,8 @@ export function CommandPaletteProvider(props: { children: ReactNode }) {
     setCommands(prevCommands => [...prevCommands, ...commands]);
   }, []);
 
-  const clearCommands = useCallback(() => {
-    setCommands([]);
+  const removeCommand = useCallback((commandName: string) => {
+    setCommands(prevCommands => prevCommands.filter(cmd => cmd.name !== commandName));
   }, []);
 
   function handleKeyDown(event: KeyboardEvent) {
@@ -65,7 +66,7 @@ export function CommandPaletteProvider(props: { children: ReactNode }) {
   }, [open]);
 
   return (
-    <CommandPaletteContext.Provider value={{ open, setOpen, commands, setCommands, addCommands, clearCommands, inputRef }}>
+    <CommandPaletteContext.Provider value={{ open, setOpen, commands, setCommands, addCommands, removeCommand, inputRef }}>
       {props.children}
     </CommandPaletteContext.Provider>
   );

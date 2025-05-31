@@ -1,17 +1,15 @@
 "use client"
 
 import { useAppbar, AppbarActionPosition } from "@/hooks/useAppbar";
-import { useCommandPalette } from "@/hooks/useCommandPalette";
 import { Add, Settings } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import { Component, Project, TracerNode } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
-import { SearchBar } from "./searchBar";
-import { commands } from "@/lib/commands";
-
 import Link from "next/link";
+import { useCommandPalette } from "@/hooks/useCommandPalette";
+import { newNodeCommand } from "@/lib/commands";
 
 export function Canvas(props: {
   project: Project,
@@ -19,12 +17,9 @@ export function Canvas(props: {
 }) {
 
   const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
-
-  const { setOpen } = useCommandPalette();
+  const { addCommands, removeCommand } = useCommandPalette();
 
   useEffect(() => {
-    setAppbarTitle(props.project.name, <SearchBar setOpen={setOpen} />)
-
     addAppbarAction(
       {
         id: "project-settings",
@@ -34,11 +29,14 @@ export function Canvas(props: {
       }
     );
 
+    addCommands([newNodeCommand]);
+
     return () => {
       clearAppbarActions();
       setAppbarTitle();
+      removeCommand(newNodeCommand.name);
     };
-  }, [clearAppbarActions, props.project.name, setOpen]);
+  }, [clearAppbarActions, removeCommand]);
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 
@@ -71,7 +69,7 @@ export function Canvas(props: {
             ))
             :
             <Tooltip title="Erste Node hinzufügen">
-              <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + commands["new-node"].pathname}>
+              <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + newNodeCommand.pathname}>
                 <Add />
               </Button>
             </Tooltip>

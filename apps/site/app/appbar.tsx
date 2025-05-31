@@ -1,13 +1,17 @@
 "use client"
 
 import { AppbarAction, AppbarActionPosition, useAppbar } from "@/hooks/useAppbar";
-import { AppBar, Button, Stack, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Stack, Toolbar } from "@mui/material";
 import Link from "next/link";
+import { SearchBar } from "./searchBar";
+import { useCommandPalette } from "@/hooks/useCommandPalette";
 
 export default function Appbar() {
 
-  const { appbarActions, appbarTitle, appbarTitleElement } = useAppbar();
+  const { appbarActions } = useAppbar();
   const iconElevation = 10;
+
+  const { setOpen } = useCommandPalette();
 
   return (
     <AppBar position="fixed" sx={{}}>
@@ -20,8 +24,7 @@ export default function Appbar() {
           }
         </Stack>
         <Toolbar>
-          {appbarTitleElement}
-          {!appbarTitleElement && <Typography variant="h6" sx={{ fontWeight: "bold", fontStyle: "italic" }}>{appbarTitle.toUpperCase()}</Typography>}
+          <SearchBar setOpen={setOpen} />
         </Toolbar>
         <Stack direction="row" alignItems="center" gap={2} sx={{ mr: 1, zIndex: (theme) => theme.zIndex.appBar + iconElevation }}>
           {

@@ -5,6 +5,8 @@ import { ThemeProviderClient } from "./themeProvider";
 import { Box, CssBaseline, Stack } from "@mui/material";
 import Appbar from "./appbar";
 import { AppbarProvider } from "@/hooks/useAppbar";
+import { CommandPaletteProvider } from "@/hooks/useCommandPalette";
+import { ClientLayout } from "./clientLayout";
 
 const roboto = Roboto({
   fallback: ["serif"],
@@ -27,12 +29,16 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           <ThemeProviderClient font={roboto.style.fontFamily}>
             <CssBaseline enableColorScheme />
             <AppbarProvider>
-              <Stack sx={{ height: "100vh" }}>
-                <Appbar />
-                <Box sx={{ marginTop: "64px", height: "100%", boxShadow: "inset 0 0 10px 0 rgba(0, 0, 0, 0.5)" }}>
-                  {props.children}
-                </Box>
-              </Stack>
+              <CommandPaletteProvider>
+                <ClientLayout>
+                  <Stack sx={{ height: "100vh" }}>
+                    <Appbar />
+                    <Box sx={{ marginTop: "64px", height: "100%", boxShadow: "inset 0 0 10px 0 rgba(0, 0, 0, 0.5)" }}>
+                      {props.children}
+                    </Box>
+                  </Stack>
+                </ClientLayout>
+              </CommandPaletteProvider>
             </AppbarProvider>
           </ThemeProviderClient>
         </AppRouterCacheProvider>

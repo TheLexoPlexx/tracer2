@@ -3,9 +3,9 @@
 import { Command, useCommandPalette } from "@/hooks/useCommandPalette";
 import { Dialog, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextField, Chip } from "@mui/material";
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { commands as initialCommands } from "@/lib/commands";
 import { SwapVert } from "@mui/icons-material";
 import { useRouter, usePathname } from "next/navigation";
+import { commands } from "@/lib/commands";
 export function CommandPalette() {
   const [search, setSearch] = useState("");
   const cp = useCommandPalette();
@@ -26,9 +26,9 @@ export function CommandPalette() {
   // Effect to add commands once on mount
   useEffect(() => {
     if (cp.commands.length === 0) {
-      cp.addCommands(Object.values(initialCommands));
+      cp.setCommands(Object.values(commands));
     }
-  }, [cp.addCommands, cp.commands.length]);
+  }, [cp.setCommands, cp.commands.length]);
 
   // Effect to reset selection when filteredCommands change (e.g., due to search)
   useEffect(() => {
@@ -68,6 +68,8 @@ export function CommandPalette() {
       command.execute()
     } else if (command.pathname) {
       router.push(pathname + command.pathname)
+    } else if (command.directUrl) {
+      router.push(command.directUrl)
     } else {
       console.error("Command has no execute or pathname")
     }
