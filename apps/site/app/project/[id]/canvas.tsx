@@ -13,12 +13,11 @@ export function Canvas(props: {
   nodes: (TracerNode & { component: Component })[]
 }) {
 
-  const { setAppbarTitle, addAppbarAction, setAppbarActions } = useAppbar();
+  const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
 
   useEffect(() => {
     setAppbarTitle(props.project.name);
 
-    //FIXME: This doesn't actually work. Not on first render or anything.
     addAppbarAction(
       {
         id: "project-settings",
@@ -29,10 +28,10 @@ export function Canvas(props: {
     );
 
     return () => {
-      // setAppbarActions([]);
+      clearAppbarActions();
       setAppbarTitle();
     };
-  }, [setAppbarActions]);
+  }, [clearAppbarActions]);
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 
@@ -52,6 +51,7 @@ export function Canvas(props: {
       panOnScroll={false}
       invertScroll={true}
       zoomScale={0.1}
+      enableArrowKeyPan={true}
       onCanvasMount={(mountFunc: ReactInfiniteCanvasHandle) => {
         mountFunc.fitContentToView({ scale: 1 });
       }}>

@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useState, createContext, useContext } from 'react';
+import { ReactNode, useState, createContext, useContext, useCallback } from 'react';
 
 export interface AppbarAction {
   id: string;
@@ -19,6 +19,7 @@ export interface AppbarContextType {
   appbarActions: AppbarAction[];
   setAppbarActions: (actions: AppbarAction[]) => void;
   addAppbarAction: (action: AppbarAction) => void;
+  clearAppbarActions: () => void;
   appbarTitle: string;
   setAppbarTitle: (title?: string) => void;
 }
@@ -29,20 +30,24 @@ export function AppbarProvider(props: { children: ReactNode }) {
   const [appbarActions, setAppbarActions] = useState<AppbarAction[]>([]);
   const [appbarTitle, setAppbarTitleState] = useState<string>("Tracer");
 
-  const addAppbarAction = (action: AppbarAction) => {
-    setAppbarActions([...appbarActions, action]);
-  }
+  const addAppbarAction = useCallback((action: AppbarAction) => {
+    setAppbarActions(prevActions => [...prevActions, action]);
+  }, []);
 
-  const setAppbarTitle = (title?: string) => {
+  const clearAppbarActions = useCallback(() => {
+    setAppbarActions([]);
+  }, []);
+
+  const setAppbarTitle = useCallback((title?: string) => {
     if (title) {
       setAppbarTitleState(title);
     } else {
       setAppbarTitleState("Tracer");
     }
-  }
+  }, []);
 
   return (
-    <AppbarContext.Provider value={{ appbarActions, setAppbarActions, addAppbarAction, appbarTitle, setAppbarTitle }}>
+    <AppbarContext.Provider value={{ appbarActions, setAppbarActions, addAppbarAction, clearAppbarActions, appbarTitle, setAppbarTitle }}>
       {props.children}
     </AppbarContext.Provider>
   );
