@@ -1,20 +1,22 @@
+"use client"
+
 import { Command } from "@/hooks/useCommandPalette";
 
-export const commands: Command[] = [
-  {
-    id: "new-node",
+export type CommandId = "new-node" | "component-library";
+
+export const commands: Record<string, Command> = {
+  "new-node": {
     name: "Neue Node",
     description: "Erstellt eine neue Node",
-    execute: () => {
-      console.log("neue node jetzt");
+    execute: async () => {
+      console.log("new-node");
     }
   },
-  {
-    id: "component-library",
+  "component-library": {
     name: "Komponentenbibliothek",
     description: "Öffnet die Komponentenbibliothek",
-    execute: () => {
-      console.log("komponentenbibliothek jetzt");
+    execute: async () => {
+      console.log("component-library");
     }
   }
-];
+};

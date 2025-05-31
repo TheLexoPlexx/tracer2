@@ -9,6 +9,7 @@ import { Component, Project, TracerNode } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
 import { SearchBar } from "./searchBar";
+import { commands } from "@/lib/commands";
 
 export function Canvas(props: {
   project: Project,
@@ -68,8 +69,10 @@ export function Canvas(props: {
               </pre>
             ))
             :
-            <Tooltip title="Erstes Bauteil hinzufügen">
-              <Button variant="contained" color="primary">
+            <Tooltip title="Erste Node hinzufügen">
+              <Button variant="contained" color="primary" onClick={() => {
+                commands["new-node"].execute()
+              }}>
                 <Add />
               </Button>
             </Tooltip>

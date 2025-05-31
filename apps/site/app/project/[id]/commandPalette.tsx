@@ -1,12 +1,12 @@
 "use client"
 
-import { useCommandPalette } from "@/hooks/useCommandPalette";
-import { Dialog, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextField, Typography, IconButton, Chip } from "@mui/material";
+import { Command, useCommandPalette } from "@/hooks/useCommandPalette";
+import { Dialog, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextField, Chip } from "@mui/material";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { commands as initialCommands } from "@/lib/commands";
-import { ArrowDownward, ArrowUpward, Close, SwapVert, SwapVertRounded } from "@mui/icons-material";
+import { SwapVert } from "@mui/icons-material";
 
-export function CommandPalette(props: {}) {
+export function CommandPalette() {
   const [search, setSearch] = useState("");
   const cp = useCommandPalette();
   const [selectedCommandIndex, setSelectedCommandIndex] = useState<number>(-1);
@@ -23,7 +23,7 @@ export function CommandPalette(props: {}) {
   // Effect to add commands once on mount
   useEffect(() => {
     if (cp.commands.length === 0) {
-      cp.addCommands(initialCommands);
+      cp.addCommands(Object.values(initialCommands));
     }
   }, [cp.addCommands, cp.commands.length]);
 
@@ -58,8 +58,8 @@ export function CommandPalette(props: {}) {
     }
   }, [selectedCommandIndex]);
 
-  const handleCommandExecution = (command: typeof initialCommands[0]) => {
-    command.execute();
+  const handleCommandExecution = (command: Command) => {
+    command.execute()
     cp.setOpen(false); // This will trigger the useEffect for !cp.open to reset search/selection
   };
 
@@ -103,7 +103,7 @@ export function CommandPalette(props: {}) {
             {
               filteredCommands.map((command, index) => (
                 <ListItem
-                  key={command.id}
+                  key={command.name}
                   ref={index === selectedCommandIndex ? selectedItemRef : null}
                   disablePadding
                 >

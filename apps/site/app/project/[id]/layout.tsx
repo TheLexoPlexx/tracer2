@@ -1,6 +1,11 @@
 import { ClientLayout } from "./clientLayout";
 
-export default async function Layout(props: { children: React.ReactNode, params: Promise<{ id: string }> }) {
+export default async function Layout(props: {
+  children: React.ReactNode,
+  params: Promise<{
+    id: string
+  }>
+}) {
 
   const { id } = await props.params;
 

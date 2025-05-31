@@ -3,7 +3,6 @@
 import { ReactNode, useState, createContext, useContext, useCallback, useEffect, useRef } from 'react';
 
 export interface Command {
-  id: string;
   name: string;
   description: string;
   execute: () => void;

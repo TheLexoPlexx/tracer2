@@ -1,7 +1,9 @@
-import { AlertTitle, Alert, Box, Button, ButtonGroup, Container, Paper, Stack, Typography } from "@mui/material";
+import { AlertTitle, Alert, Box, Button, ButtonGroup, Container, Stack } from "@mui/material";
 import { Canvas } from "./canvas";
 import prisma from "@/lib/prismadb"
-import { Add } from "@mui/icons-material";
+import { Add, Hub } from "@mui/icons-material";
+import { commands } from "@/lib/commands";
+import { PageButtonGroup } from "./pageButtonGroup";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
 
@@ -32,7 +34,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     }
   });
 
-
   return (
     <>
       <Stack sx={{
@@ -47,10 +48,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <ButtonGroup variant="outlined" sx={{ backgroundColor: 'background.paper', position: 'absolute' }}>
-          <Button startIcon={<Add />}>Bauteil</Button>
-          <Button startIcon={<Add />} disabled>Kabel</Button>
-        </ButtonGroup>
+        <PageButtonGroup />
 
       </Stack>
 
