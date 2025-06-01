@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { ClientLayout } from "./clientLayout";
-
+import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import prisma from "@/lib/prismadb";
 export default async function Layout(props: {
   children: ReactNode,
-  modal: ReactNode,
   params: Promise<{
     id: string
   }>
@@ -11,10 +12,34 @@ export default async function Layout(props: {
 
   const { id } = await props.params;
 
+  const components = await prisma.component.findMany();
+
   return (
-    <ClientLayout id={id}>
-      {props.children}
-      {props.modal}
-    </ClientLayout>
+    <Stack direction="row">
+      <Container sx={{ maxHeight: "100vh", overflow: "auto" }} disableGutters>
+        <List disablePadding>
+          <ListItem disablePadding>
+            <ListItemButton href="/components/new">
+              <ListItemIcon>
+                <Add />
+              </ListItemIcon>
+              <ListItemText primary="Neue Komponente" />
+            </ListItemButton>
+          </ListItem>
+          {
+            components.map((component) => (
+              <ListItem disablePadding key={component.id}>
+                <ListItemButton href={`/components/${component.id}`}>
+                  <ListItemText primary={component.name} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          }
+        </List>
+      </Container>
+      <ClientLayout id={id}>
+        {props.children}
+      </ClientLayout>
+    </Stack>
   )
 }

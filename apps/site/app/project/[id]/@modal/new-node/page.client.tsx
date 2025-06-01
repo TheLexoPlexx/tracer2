@@ -1,0 +1,134 @@
+"use client"
+
+import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip, ListItemIcon, InputAdornment } from "@mui/material";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import { Add, Search, SwapVert } from "@mui/icons-material";
+import { Component } from "@prisma/client";
+import { useRouter } from "next/navigation";
+
+export function NewNodeCommandPalette(props: {
+  components: Component[]
+}) {
+  const [search, setSearch] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const selectedItemRef = useRef<HTMLLIElement | null>(null);
+
+  const router = useRouter();
+
+  // Memoize filtered commands
+  const filteredComponents = useMemo(() => {
+    if (!props.components.length) {
+      return props.components.filter(component => component.name.toLowerCase().includes(search.toLowerCase()));
+    }
+    return props.components.filter(component => component.name.toLowerCase().includes(search.toLowerCase()));
+  }, [props.components, search]);
+
+  // Effect to reset selection when filteredCommands change (e.g., due to search)
+  useEffect(() => {
+    if (filteredComponents.length > 0) {
+      setSelectedIndex(0);
+    } else {
+      setSelectedIndex(-1);
+    }
+  }, [filteredComponents]);
+
+  // Effect to scroll selected item into view
+  useEffect(() => {
+    if (selectedItemRef.current) {
+      selectedItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [selectedIndex]);
+
+  const handleComponentSelected = (component: Component) => {
+
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+
+    if (event.key === "Escape") {
+      setSearch("");
+      setSelectedIndex(-1);
+      router.back();
+      return;
+    }
+
+    if (!filteredComponents.length && (event.key === "ArrowUp" || event.key === "ArrowDown" || event.key === "Enter")) {
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSelectedIndex(prevIndex => (prevIndex + 1) % filteredComponents.length);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSelectedIndex(prevIndex => (prevIndex - 1 + filteredComponents.length) % filteredComponents.length);
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < filteredComponents.length) {
+        handleComponentSelected(filteredComponents[selectedIndex]);
+      }
+    }
+  };
+
+  return (
+    <Dialog open={true} maxWidth="md" fullWidth onClose={() => { router.back() }}>
+      <Stack spacing={2} sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
+        </Stack>
+        <TextField
+          fullWidth
+          autoFocus
+          disabled={props.components.length === 0}
+          sx={{ zIndex: 1200 }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+          slotProps={
+            {
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                )
+              }
+            }
+          }
+        />
+        <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+          {
+            props.components.length > 0 ?
+              filteredComponents.map((component, index) => (
+                <ListItem
+                  key={component.name}
+                  ref={index === selectedIndex ? selectedItemRef : null}
+                  disablePadding
+                >
+                  <ListItemButton
+                    selected={index === selectedIndex}
+                    onClick={() => handleComponentSelected(component)}
+                  >
+                    <ListItemText primary={component.name} secondary={component.original_part_number} />
+                  </ListItemButton>
+                </ListItem>
+              ))
+              :
+              <ListItem>
+                <ListItemButton href="/components">
+                  <ListItemIcon>
+                    <Add />
+                  </ListItemIcon>
+                  <ListItemText primary="Keine Komponenten gefunden" secondary="Erstellen Sie eine neue Komponente" />
+                </ListItemButton>
+              </ListItem>
+          }
+        </List>
+      </Stack>
+    </Dialog>
+  );
+}

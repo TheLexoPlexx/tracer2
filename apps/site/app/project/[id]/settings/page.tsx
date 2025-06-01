@@ -1,8 +1,8 @@
 "use client"
 
 import { ArrowBack, Delete } from "@mui/icons-material";
-import { Alert, Box, Button, Container, Divider, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
-import { deleteProjectAction } from "./deleteProjectAction";
+import { Alert, Button, Container, Divider, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
+import { deleteProjectAction } from "./deleteProject.action";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 

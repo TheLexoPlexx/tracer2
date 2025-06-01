@@ -71,8 +71,8 @@ model Loom {
 model Component {
   id                   String       @id @default(cuid())
   name                 String
-  original_part_number String
-  original_label       String
+  original_part_number String?
+  original_label       String?
   pin_count            Int
   TracerNodes          TracerNode[]
   //image?

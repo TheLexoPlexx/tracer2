@@ -1,0 +1,43 @@
+import { Alert, Container } from "@mui/material";
+import prisma from "@/lib/prismadb";
+import { Component } from "@prisma/client";
+import { ComponentComp } from "./componentComp";
+
+export default async function Page(props: {
+  params: Promise<{ componentId: string }>
+}) {
+
+  const { componentId } = await props.params;
+
+  let component: Component | null = null;
+  let newComponent = false;
+
+  if (componentId === "new") {
+    newComponent = true;
+    component = {
+      id: "",
+      name: "",
+      pin_count: 0,
+      original_part_number: "",
+      original_label: ""
+    }
+  } else {
+    component = await prisma.component.findUnique({
+      where: {
+        id: componentId
+      }
+    });
+  }
+
+  if (!component) {
+    return (
+      <Container maxWidth="md" sx={{ p: 2 }}>
+        <Alert severity="error">Komponente nicht gefunden</Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <ComponentComp component={component} newComponent={newComponent} />
+  )
+}

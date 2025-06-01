@@ -6,12 +6,14 @@ import Link from "next/link";
 import { SearchBar } from "./searchBar";
 import { useCommandPalette } from "@/hooks/useCommandPalette";
 
-export default function Appbar() {
+export function Appbar() {
 
   const { appbarActions } = useAppbar();
   const iconElevation = 10;
 
   const { setOpen } = useCommandPalette();
+
+  //TODO: useAppbar causes layout shift
 
   return (
     <AppBar position="fixed" sx={{}}>

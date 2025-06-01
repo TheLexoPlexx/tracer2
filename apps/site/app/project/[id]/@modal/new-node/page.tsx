@@ -1,10 +1,11 @@
-"use client"
+import { NewNodeCommandPalette } from "./page.client";
+import prisma from "@/lib/prismadb"
 
-import { ClientPageNewNode } from "./clientPage";
+export default async function Page() {
 
-export default function Page() {
+  const components = await prisma.component.findMany() || [];
 
   return (
-    <ClientPageNewNode />
+    <NewNodeCommandPalette components={components} />
   );
 }

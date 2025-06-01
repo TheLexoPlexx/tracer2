@@ -1,7 +1,7 @@
 import { AlertTitle, Alert, Box, Container, Stack } from "@mui/material";
 import { Canvas } from "./canvas";
 import prisma from "@/lib/prismadb"
-import { PageButtonGroup } from "./pageButtonGroup";
+import { PageButtonGroup } from "./buttonGroup";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
 

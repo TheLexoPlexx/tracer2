@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { ThemeProviderClient } from "./themeProvider";
 import { Box, CssBaseline, Stack } from "@mui/material";
-import Appbar from "./appbar";
+import { Appbar } from "./appbar";
 import { AppbarProvider } from "@/hooks/useAppbar";
 import { CommandPaletteProvider } from "@/hooks/useCommandPalette";
-import { ClientLayout } from "./clientLayout";
+import { ClientLayout } from "./layout.client";
 
 const roboto = Roboto({
   fallback: ["serif"],

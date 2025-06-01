@@ -1,7 +1,7 @@
 "use client"
 
 import { Command, useCommandPalette } from "@/hooks/useCommandPalette";
-import { Dialog, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextField, Chip } from "@mui/material";
+import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip } from "@mui/material";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SwapVert } from "@mui/icons-material";
 import { useRouter, usePathname } from "next/navigation";
@@ -97,40 +97,38 @@ export function CommandPalette() {
 
   return (
     <Dialog open={cp.open} maxWidth="md" fullWidth onClose={() => cp.setOpen(false)}>
-      <Paper elevation={3} sx={{ p: 2 }}>
-        <Stack spacing={2}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
-          </Stack>
-          <TextField
-            fullWidth
-            ref={cp.inputRef}
-            autoFocus
-            sx={{ zIndex: 1200 }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <List sx={{ maxHeight: 300, overflow: 'auto' }}>
-            {
-              filteredCommands.map((command, index) => (
-                <ListItem
-                  key={command.name}
-                  ref={index === selectedCommandIndex ? selectedItemRef : null}
-                  disablePadding
-                >
-                  <ListItemButton
-                    selected={index === selectedCommandIndex}
-                    onClick={() => handleCommandExecution(command)}
-                  >
-                    <ListItemText primary={command.name} secondary={command.description} />
-                  </ListItemButton>
-                </ListItem>
-              ))
-            }
-          </List>
+      <Stack spacing={2} sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
         </Stack>
-      </Paper>
+        <TextField
+          fullWidth
+          ref={cp.inputRef}
+          autoFocus
+          sx={{ zIndex: 1200 }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+          {
+            filteredCommands.map((command, index) => (
+              <ListItem
+                key={command.name}
+                ref={index === selectedCommandIndex ? selectedItemRef : null}
+                disablePadding
+              >
+                <ListItemButton
+                  selected={index === selectedCommandIndex}
+                  onClick={() => handleCommandExecution(command)}
+                >
+                  <ListItemText primary={command.name} secondary={command.description} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          }
+        </List>
+      </Stack>
     </Dialog>
   );
 }

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { ClientLayout } from "./clientLayout";
+import { ClientLayout } from "./layout.client";
 
 export default async function Layout(props: {
   children: ReactNode,
