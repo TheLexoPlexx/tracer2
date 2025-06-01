@@ -14,6 +14,7 @@ export function Appbar() {
   const { setOpen } = useCommandPalette();
 
   //TODO: useAppbar causes layout shift
+  //Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/2
 
   return (
     <AppBar position="fixed" sx={{}}>
