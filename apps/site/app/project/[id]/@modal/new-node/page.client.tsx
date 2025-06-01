@@ -1,17 +1,20 @@
 "use client"
 
-import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip, ListItemIcon, InputAdornment } from "@mui/material";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip, ListItemIcon, InputAdornment, Alert } from "@mui/material";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { Add, Search, SwapVert } from "@mui/icons-material";
 import { Component } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { createNode } from "./newnode.action";
 
 export function NewNodeCommandPalette(props: {
-  components: Component[]
+  components: Component[],
+  projectId: string
 }) {
   const [search, setSearch] = useState("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const selectedItemRef = useRef<HTMLLIElement | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
 
   const router = useRouter();
 
@@ -42,7 +45,19 @@ export function NewNodeCommandPalette(props: {
     }
   }, [selectedIndex]);
 
-  const handleComponentSelected = (component: Component) => {
+  const handleComponentSelected = async (component: Component) => {
+    const node = await createNode({
+      projectId: props.projectId,
+      componentId: component.id,
+      x: 0,
+      y: 0,
+    });
+
+    if (node.data) {
+      router.push(`/project/${props.projectId}`);
+    } else {
+      setErrorMsg(node.error);
+    }
 
   };
 
@@ -80,6 +95,7 @@ export function NewNodeCommandPalette(props: {
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
         </Stack>
+        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
         <TextField
           fullWidth
           autoFocus

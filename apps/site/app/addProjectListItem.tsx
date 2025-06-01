@@ -3,7 +3,7 @@
 import { Add } from "@mui/icons-material";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import { addProject } from "./addProjectAction";
+import { addProject } from "./addProject.action";
 import { useRouter } from "next/navigation";
 
 export default function AddProjectListItem() {

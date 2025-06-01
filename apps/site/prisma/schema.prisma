@@ -81,7 +81,7 @@ model Component {
 // A TracerNode, An actual TracerNode in the system, differentiated from the component in case multiple of the same component are used in the system
 model TracerNode {
   id               String         @id @default(cuid())
-  name             String
+  name             String?
   component_id     String
   component        Component      @relation(fields: [component_id], references: [id])
   configuration_id String?
@@ -89,8 +89,8 @@ model TracerNode {
   connections      Connection[]
   project_id       String
   project          Project        @relation(fields: [project_id], references: [id])
-  x                Float
-  y                Float
+  x                Float          @default(0)
+  y                Float          @default(0)
 }
 
 model Connection {

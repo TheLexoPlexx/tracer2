@@ -6,7 +6,8 @@ import { Component } from "@prisma/client";
 import { useState } from "react";
 import { deleteComponent, upsertComponent } from "./component.action";
 import { useRouter } from "next/navigation";
-export function ComponentComp(props: {
+
+export function ComponentEditComponent(props: {
   component: Component,
   newComponent: boolean
 }) {

@@ -10,6 +10,8 @@ import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canv
 import Link from "next/link";
 import { useCommandPalette } from "@/hooks/useCommandPalette";
 import { newNodeCommand } from "@/lib/commands";
+import { CanvasNode } from "./canvasNode";
+import { CanvasComponentNode } from "./canvasComponentNode";
 
 export function Canvas(props: {
   project: Project,
@@ -59,22 +61,38 @@ export function Canvas(props: {
       onCanvasMount={(mountFunc: ReactInfiniteCanvasHandle) => {
         mountFunc.fitContentToView({ scale: 1 });
       }}>
-      <Box>
+      <>
         {
           props.nodes.length > 0 ?
             props.nodes.map((node) => (
-              <pre key={node.id}>
-                {JSON.stringify(node, null, 2)}
-              </pre>
+              <>
+                <CanvasNode key={node.id} x={node.x} y={node.y}>
+                  <CanvasComponentNode node={node} />
+                </CanvasNode>
+                <CanvasNode key={node.id} x={node.x + 300} y={node.y}>
+                  <CanvasComponentNode node={node} />
+                </CanvasNode>
+                <CanvasNode key={node.id} x={node.x} y={node.y + 300}>
+                  <CanvasComponentNode node={node} />
+                </CanvasNode>
+                <CanvasNode key={node.id} x={node.x - 300} y={node.y}>
+                  <CanvasComponentNode node={node} />
+                </CanvasNode>
+                <CanvasNode key={node.id} x={node.x} y={node.y - 300}>
+                  <CanvasComponentNode node={node} />
+                </CanvasNode>
+              </>
             ))
             :
-            <Tooltip title="Erste Node hinzufügen">
-              <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + newNodeCommand.pathname}>
-                <Add />
-              </Button>
-            </Tooltip>
+            <CanvasNode x={0} y={0}>
+              <Tooltip title="Erste Node hinzufügen">
+                <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + newNodeCommand.pathname}>
+                  <Add />
+                </Button>
+              </Tooltip>
+            </CanvasNode>
         }
-      </Box>
+      </>
     </ReactInfiniteCanvas>
   );
 }

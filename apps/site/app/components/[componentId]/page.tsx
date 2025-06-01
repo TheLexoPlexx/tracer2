@@ -1,7 +1,7 @@
 import { Alert, Container } from "@mui/material";
 import prisma from "@/lib/prismadb";
 import { Component } from "@prisma/client";
-import { ComponentComp } from "./componentComp";
+import { ComponentEditComponent } from "./componentEdit";
 
 export default async function Page(props: {
   params: Promise<{ componentId: string }>
@@ -38,6 +38,6 @@ export default async function Page(props: {
   }
 
   return (
-    <ComponentComp component={component} newComponent={newComponent} />
+    <ComponentEditComponent component={component} newComponent={newComponent} />
   )
 }
