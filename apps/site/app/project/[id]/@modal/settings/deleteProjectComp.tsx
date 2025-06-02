@@ -20,6 +20,7 @@ export function DeleteProject(props: {
       <Button variant="contained" color="error" loading={loading} startIcon={<Delete />} onClick={async () => {
 
         // TODO: Make this a beautiful modal
+        // Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/3
         const confirmed = confirm("Soll das Projekt wirklich gelöscht werden?");
 
         if (!confirmed) {
