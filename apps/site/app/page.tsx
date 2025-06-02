@@ -1,6 +1,6 @@
 import { Container, List, ListItem, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
 import prisma from "@/lib/prismadb"
-import AddProjectListItem from "./addProjectListItem";
+import AddProjectListItem from "./createProjectListItem";
 import Link from "next/link";
 export default async function Page() {
 

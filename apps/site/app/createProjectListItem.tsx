@@ -3,7 +3,7 @@
 import { Add } from "@mui/icons-material";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, TextField } from "@mui/material";
 import { useState } from "react";
-import { addProject } from "./addProject.action";
+import { createProject } from "./createProject.action";
 import { useRouter } from "next/navigation";
 
 export default function AddProjectListItem() {
@@ -45,7 +45,7 @@ export default function AddProjectListItem() {
           <Button onClick={async () => {
             setDialogOpen(false);
 
-            const res = await addProject({ name, description });
+            const res = await createProject({ name, description });
 
             if (res.error) {
               setErrorMsg(res.error);

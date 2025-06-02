@@ -13,26 +13,24 @@ model Project {
   description    String?
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt
-  TracerNodes    TracerNode[]
+  nodes          TracerNode[]
   configurations Configuration[]
 }
 
 model Colour {
-  id                     String                   @id @default(cuid())
-  display_name           String
-  short_name             String
-  red                    Int
-  green                  Int
-  blue                   Int
-  cables                 Cable[]
-  commonCableSignalTypes CommonCableSignalTypes[]
+  id           String  @id @default(cuid())
+  display_name String
+  short_name   String
+  red          Int
+  green        Int
+  blue         Int
+  cables       Cable[]
 }
 
 model SignalType {
-  id                     String                   @id @default(cuid())
-  name                   String
-  cable                  Cable[]
-  commonCableSignalTypes CommonCableSignalTypes[]
+  id    String  @id @default(cuid())
+  name  String
+  cable Cable[]
 }
 
 // Connections between TracerNodes
@@ -44,19 +42,9 @@ model Cable {
   loom             Loom?         @relation(fields: [loom_id], references: [id])
   signal_type_id   String?
   signal_type      SignalType?   @relation(fields: [signal_type_id], references: [id])
-  TracerNode_id    String?
   connections      Connection[]
   terminal_type_id String?
   terminal_type    TerminalType? @relation(fields: [terminal_type_id], references: [id])
-}
-
-model CommonCableSignalTypes {
-  id             String     @id @default(cuid())
-  name           String
-  colour_id      String
-  colour         Colour     @relation(fields: [colour_id], references: [id])
-  signal_type_id String
-  signal_type    SignalType @relation(fields: [signal_type_id], references: [id])
 }
 
 // A Descriptor to identify a groub of Cables and their physical location
@@ -74,7 +62,7 @@ model Component {
   original_part_number String?
   original_label       String?
   pin_count            Int
-  TracerNodes          TracerNode[]
+  nodes                TracerNode[]
   //image?
 }
 
@@ -95,8 +83,8 @@ model TracerNode {
 
 model Connection {
   id               String        @id @default(cuid())
-  TracerNode_id    String
-  TracerNode       TracerNode    @relation(fields: [TracerNode_id], references: [id])
+  node_id          String
+  node             TracerNode    @relation(fields: [node_id], references: [id])
   pin_number       Int
   configuration_id String
   configuration    Configuration @relation(fields: [configuration_id], references: [id])
@@ -107,10 +95,10 @@ model Connection {
 model Configuration {
   id          String       @id @default(cuid())
   name        String
-  default     Boolean
+  default     Boolean      @default(false)
   project_id  String
   project     Project      @relation(fields: [project_id], references: [id])
-  TracerNodes TracerNode[]
+  nodes       TracerNode[]
   connections Connection[]
 }
 

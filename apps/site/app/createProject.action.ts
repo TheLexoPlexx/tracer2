@@ -11,7 +11,7 @@ const schema = z.object({
   description: z.string().min(2),
 })
 
-export async function addProject(input: z.infer<typeof schema>): ServerActionResponse<Project> {
+export async function createProject(input: z.infer<typeof schema>): ServerActionResponse<Project> {
 
   const validated = schema.safeParse(input);
 
@@ -23,7 +23,16 @@ export async function addProject(input: z.infer<typeof schema>): ServerActionRes
   }
 
   const project = await prisma.project.create({
-    data: { name: validated.data.name, description: validated.data.description },
+    data: {
+      name: validated.data.name,
+      description: validated.data.description,
+      configurations: {
+        create: {
+          name: "Default",
+          default: true
+        },
+      },
+    },
   })
 
   return {

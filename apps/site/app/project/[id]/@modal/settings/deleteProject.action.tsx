@@ -8,13 +8,39 @@ const schema = z.object({
   projectId: z.string(),
 });
 
-export async function deleteProjectAction(input: z.infer<typeof schema>): ServerActionResponse<void> {
+export async function deleteProject(input: z.infer<typeof schema>): ServerActionResponse<void> {
 
   const validated = schema.safeParse(input);
 
   if (!validated.success) {
     return {
       error: validated.error.message,
+      data: null,
+    }
+  }
+
+  const configurations = await prisma.configuration.deleteMany({
+    where: {
+      project_id: validated.data.projectId,
+    },
+  });
+
+  if (!configurations) {
+    return {
+      error: "Konfigurationen konnten nicht gelöscht werden",
+      data: null,
+    }
+  }
+
+  const nodes = await prisma.tracerNode.deleteMany({
+    where: {
+      project_id: validated.data.projectId,
+    },
+  });
+
+  if (!nodes) {
+    return {
+      error: "Nodes konnten nicht gelöscht werden",
       data: null,
     }
   }

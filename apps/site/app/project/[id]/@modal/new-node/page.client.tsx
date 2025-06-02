@@ -4,7 +4,7 @@ import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField,
 import { useEffect, useState, useMemo, useRef } from "react";
 import { Add, Search, SwapVert } from "@mui/icons-material";
 import { Component } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createNode } from "./newnode.action";
 
 export function NewNodeCommandPalette(props: {
@@ -15,6 +15,11 @@ export function NewNodeCommandPalette(props: {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const selectedItemRef = useRef<HTMLLIElement | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
+
+  const searchParams = useSearchParams();
+
+  const nodeId = searchParams.get("nodeId");
+  const pin = searchParams.get("pin");
 
   const router = useRouter();
 
@@ -46,18 +51,30 @@ export function NewNodeCommandPalette(props: {
   }, [selectedIndex]);
 
   const handleComponentSelected = async (component: Component) => {
-    const node = await createNode({
-      projectId: props.projectId,
-      componentId: component.id,
-      x: 0,
-      y: 0,
-    });
 
-    if (node.data) {
-      router.push(`/project/${props.projectId}`);
+    if (!nodeId || !pin) {
+      const node = await createNode({
+        projectId: props.projectId,
+        componentId: component.id,
+        x: 0,
+        y: 0,
+      });
+
+      if (node.data) {
+        router.push(`/project/${props.projectId}`);
+      } else {
+        setErrorMsg(node.error);
+      }
+
     } else {
-      setErrorMsg(node.error);
+      // const node = await createNode({
+      //   projectId: props.projectId,
+      //   componentId: componentId,
+      //   x: 200,
+      //   y: 200,
+      // });
     }
+
 
   };
 
