@@ -23,12 +23,18 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     )
   }
 
-  const nodes = await prisma.tracerNode.findMany({
+  const nodes = await prisma.node.findMany({
     where: {
       project_id: id
     },
     include: {
       component: true
+    }
+  });
+
+  const configurations = await prisma.configuration.findMany({
+    where: {
+      project_id: id
     }
   });
 
@@ -50,7 +56,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       </Stack>
 
       <Box sx={{ width: "100%", height: "100%" }}>
-        <Canvas project={project} nodes={nodes} />
+        <Canvas project={project} nodes={nodes} configurations={configurations} />
       </Box>
     </>
   );

@@ -2,8 +2,9 @@
 
 import prisma from "@/lib/prismadb";
 import { ServerActionResponse } from "@/lib/serverActionUtil";
-import { TracerNode } from "@prisma/client";
+import { Node } from "@prisma/client";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const newNodeSchema = z.object({
   projectId: z.string(),
@@ -12,41 +13,43 @@ const newNodeSchema = z.object({
   y: z.number(),
 })
 
-export async function createNode(tracerNodeInput: z.infer<typeof newNodeSchema>): ServerActionResponse<TracerNode> {
+export async function createNode(nodeInput: z.infer<typeof newNodeSchema>): ServerActionResponse<Node> {
 
-  const validatedFields = connectNewNodeSchema.safeParse(tracerNodeInput);
+  const validatedFields = newNodeSchema.safeParse(nodeInput);
 
   if (!validatedFields.success) {
     return { error: validatedFields.error.message, data: null };
   }
 
-  const node = validatedFields.data;
+  const nodeData = validatedFields.data;
 
-  const tracerNode = await prisma.tracerNode.create({
+  const node = await prisma.node.create({
     data: {
-      project_id: node.projectId,
-      component_id: node.componentId,
-      x: node.x,
-      y: node.y,
+      project_id: nodeData.projectId,
+      component_id: nodeData.componentId,
+      x: nodeData.x,
+      y: nodeData.y,
     }
   });
 
-  if (!tracerNode) {
+  if (!node) {
     return { error: "Failed to create node", data: null };
   }
 
-  return { data: tracerNode };
+  revalidatePath(`/project/${node.project_id}`);
+
+  return { data: node };
 }
 
 
-const connectNewNodeSchema = z.object({
-  projectId: z.string(),
-  componentId: z.string(),
-  x: z.number(),
-  y: z.number(),
-  componentPin: z.string(),
-  pin: z.number().min(0),
-})
+// const connectNewNodeSchema = z.object({
+//   projectId: z.string(),
+//   componentId: z.string(),
+//   x: z.number(),
+//   y: z.number(),
+//   componentPin: z.string(),
+//   pin: z.number().min(0),
+// })
 
 // export async function createNodeWithPin(tracerNodeInput: z.infer<typeof connectNewNodeSchema>): ServerActionResponse<TracerNode> {
 

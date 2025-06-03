@@ -62,6 +62,7 @@ export function NewNodeCommandPalette(props: {
 
       if (node.data) {
         router.push(`/project/${props.projectId}`);
+        //TODO: Doesn´t close the modal
       } else {
         setErrorMsg(node.error);
       }
@@ -69,7 +70,7 @@ export function NewNodeCommandPalette(props: {
     } else {
       // const node = await createNode({
       //   projectId: props.projectId,
-      //   componentId: componentId,
+      //   componentId: component.id,
       //   x: 200,
       //   y: 200,
       // });

@@ -8,7 +8,8 @@ import z from "zod";
 
 const schema = z.object({
   name: z.string().min(1),
-  project_id: z.string().min(1)
+  project_id: z.string().min(1),
+  inherits_from_id: z.string().min(1)
 })
 
 export async function createConfiguration(data: z.infer<typeof schema>): ServerActionResponse<Configuration> {

@@ -4,7 +4,7 @@ import { useAppbar, AppbarActionPosition } from "@/hooks/useAppbar";
 import { Add, Settings, Tune } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
-import { Component, Project, TracerNode } from "@prisma/client";
+import { Component, Configuration, Project, Node } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
 import Link from "next/link";
@@ -13,27 +13,20 @@ import { newNodeCommand } from "@/lib/commands";
 import { CanvasNode } from "./canvasNode";
 import { CanvasComponentNode } from "./canvasComponentNode";
 
-export type CanvasNode = TracerNode & {
+export type CanvasNode = Node & {
   component: Component
 }
 
 export function Canvas(props: {
   project: Project,
-  nodes: CanvasNode[]
+  nodes: CanvasNode[],
+  configurations: Configuration[]
 }) {
 
   const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
   const { addCommands, removeCommand } = useCommandPalette();
 
   useEffect(() => {
-    addAppbarAction(
-      {
-        id: "configurations",
-        icon: <Tooltip title="Konfigurationen"><Tune sx={{ color: 'white' }} /></Tooltip>,
-        position: AppbarActionPosition.RIGHT,
-        href: "/project/" + props.project.id + "/configurations"
-      }
-    );
     addAppbarAction(
       {
         id: "project-settings",
@@ -76,7 +69,7 @@ export function Canvas(props: {
             props.nodes.map((node) => (
               <Box key={node.id + "box"}>
                 <CanvasNode key={node.id + "1"} x={node.x} y={node.y}>
-                  <CanvasComponentNode node={node} />
+                  <CanvasComponentNode node={node} configurations={props.configurations} />
                 </CanvasNode>
                 {/* <CanvasNode key={node.id + "2"} x={node.x + 300} y={node.y}>
                   <CanvasComponentNode node={node} />

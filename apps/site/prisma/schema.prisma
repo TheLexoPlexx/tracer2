@@ -13,7 +13,7 @@ model Project {
   description    String?
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt
-  nodes          TracerNode[]
+  nodes          Node[]
   configurations Configuration[]
 }
 
@@ -28,23 +28,22 @@ model Colour {
 }
 
 model SignalType {
-  id    String  @id @default(cuid())
-  name  String
-  cable Cable[]
+  id      String  @id @default(cuid())
+  name    String
+  voltage Float?
+  cable   Cable[]
 }
 
-// Connections between TracerNodes
+// Connections between Nodes
 model Cable {
-  id               String        @id @default(cuid())
-  cross_section    Float
-  colour           Colour[]
-  loom_id          String?
-  loom             Loom?         @relation(fields: [loom_id], references: [id])
-  signal_type_id   String?
-  signal_type      SignalType?   @relation(fields: [signal_type_id], references: [id])
-  connections      Connection[]
-  terminal_type_id String?
-  terminal_type    TerminalType? @relation(fields: [terminal_type_id], references: [id])
+  id             String       @id @default(cuid())
+  cross_section  Float
+  colour         Colour[]
+  loom_id        String?
+  loom           Loom?        @relation(fields: [loom_id], references: [id])
+  signal_type_id String?
+  signal_type    SignalType?  @relation(fields: [signal_type_id], references: [id])
+  connections    Connection[]
 }
 
 // A Descriptor to identify a groub of Cables and their physical location
@@ -57,35 +56,40 @@ model Loom {
 
 // A Component, might be the ECU or a sensor or just a connector
 model Component {
-  id                   String       @id @default(cuid())
+  id                   String  @id @default(cuid())
   name                 String
   original_part_number String?
   original_label       String?
   pin_count            Int
-  nodes                TracerNode[]
+  nodes                Node[]
   //image?
 }
 
-// A TracerNode, An actual TracerNode in the system, differentiated from the component in case multiple of the same component are used in the system
-model TracerNode {
+// A Node, An actual Node in the system, differentiated from the component in case multiple of the same component are used in the system
+model Node {
   id               String         @id @default(cuid())
   name             String?
   component_id     String
   component        Component      @relation(fields: [component_id], references: [id])
   configuration_id String?
   configuration    Configuration? @relation(fields: [configuration_id], references: [id])
-  connections      Connection[]
   project_id       String
   project          Project        @relation(fields: [project_id], references: [id])
   x                Float          @default(0)
   y                Float          @default(0)
+  connections_to   Connection[]   @relation("node_from_connection")
+  connections_from Connection[]   @relation("node_to_connection")
+  // connections define, which pin connects to which node on the other side of the connection.
 }
 
 model Connection {
   id               String        @id @default(cuid())
-  node_id          String
-  node             TracerNode    @relation(fields: [node_id], references: [id])
-  pin_number       Int
+  node_from_id     String
+  node_from        Node          @relation(fields: [node_from_id], references: [id], name: "node_from_connection")
+  pin_number_from  Int
+  node_to_id       String
+  node_to          Node          @relation(fields: [node_to_id], references: [id], name: "node_to_connection")
+  pin_number_to    Int
   configuration_id String
   configuration    Configuration @relation(fields: [configuration_id], references: [id])
   cable_id         String
@@ -93,18 +97,14 @@ model Connection {
 }
 
 model Configuration {
-  id          String       @id @default(cuid())
-  name        String
-  default     Boolean      @default(false)
-  project_id  String
-  project     Project      @relation(fields: [project_id], references: [id])
-  nodes       TracerNode[]
-  connections Connection[]
-}
-
-model TerminalType {
-  id     String  @id @default(cuid())
-  name   String
-  number Int
-  cable  Cable[]
+  id               String          @id @default(cuid())
+  name             String
+  default          Boolean         @default(false)
+  project_id       String
+  project          Project         @relation(fields: [project_id], references: [id])
+  nodes            Node[]
+  connections      Connection[]
+  inherits_from_id String?
+  inherits_from    Configuration?  @relation(fields: [inherits_from_id], references: [id], name: "inherits_from")
+  children         Configuration[] @relation("inherits_from")
 }

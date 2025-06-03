@@ -1,21 +1,29 @@
 "use client"
 
-import { Paper, Stack, Typography, Divider, Button, Popover, TextField } from "@mui/material";
+import { Paper, Stack, Typography, Divider, Button, TextField, Autocomplete, Drawer, List, ListItem, ListItemText, ListItemButton, Box } from "@mui/material";
 import { CanvasNode } from "./canvas";
 import { AddLink, Launch } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "next/navigation";
+import { Configuration } from "@prisma/client";
 
 export function CanvasComponentNode(props: {
-  node: CanvasNode
+  node: CanvasNode,
+  configurations: Configuration[]
 }) {
 
   const { id } = useParams();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [pin, setPin] = useState<number>(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
   const handleClose = () => {
@@ -30,35 +38,58 @@ export function CanvasComponentNode(props: {
       <Stack direction="column" spacing={2}>
         <Stack direction="row" spacing={1}>
           <Typography variant="h6">{props.node.component.name}</Typography>
+
           <Button variant="outlined" color="primary" size="small" onClick={handleClick}>
             <AddLink />
           </Button>
-          <Popover
+          <Drawer
             id={popoverId}
             open={open}
             onClose={handleClose}
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            anchor="right"
+            variant="temporary"
           >
-            <Stack sx={{ p: 2 }} direction="row" spacing={2}>
-              <TextField
-                label="Pin"
-                type="number"
-                value={pin}
-                size="small"
-                onChange={(event) => setPin(parseInt(event.target.value))}
+            <Stack spacing={2} sx={{ p: 2, width: "768px" }}>
+              <Autocomplete
+                options={props.configurations}
+                getOptionLabel={(option) => option.name}
+                defaultValue={props.configurations[0]}
+                renderInput={(params) => <TextField {...params} label="Konfiguration" />}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={handleClose}
-                href={"/project/" + id + "/new-node?nodeId=" + props.node.id + "&pin=" + pin}
-              >
-                <Launch />
-              </Button>
+              <Stack direction="row" spacing={2}>
+                <Stack direction="column" spacing={1} sx={{ width: "100%" }}>
+                  {/* <TextField
+                    label="Pin"
+                    type="number"
+                    value={pin}
+                    size="small"
+                    onChange={(event) => setPin(parseInt(event.target.value))}
+                    inputRef={inputRef}
+                  /> */}
+                  <Box sx={{ overflow: "auto", maxHeight: "90vh", width: "100%" }}>
+                    <List disablePadding dense>
+                      {
+                        Array.from({ length: props.node.component.pin_count }, (_, i) => (
+                          <ListItemButton key={i} onClick={() => setPin(i)} dense>
+                            <ListItemText primary={i} />
+                          </ListItemButton>
+                        ))
+                      }
+                    </List>
+                  </Box>
+                </Stack>
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={handleClose}
+                  href={"/project/" + id + "/new-node?nodeId=" + props.node.id + "&pin=" + pin}
+                >
+                  <Launch />
+                </Button> */}
+              </Stack>
             </Stack>
-          </Popover>
+          </Drawer>
         </Stack>
         <Divider />
         <Stack direction="row" spacing={1}>

@@ -10,8 +10,8 @@ export default async function Page(props: {
   const { id } = await props.params;
 
   return (
-    <Stack direction="column" gap={2} sx={{ p: 2 }}>
-      <Stack direction="row" gap={2} sx={{ width: "768px" }}>
+    <Stack direction="column" gap={2} sx={{ p: 2, width: "768px" }}>
+      <Stack direction="row" gap={2} sx={{ width: "100%" }}>
         <Tooltip title="Zurück">
           <IconButton href={"/project/" + id}>
             <ArrowBack />

@@ -32,7 +32,7 @@ export async function deleteProject(input: z.infer<typeof schema>): ServerAction
     }
   }
 
-  const nodes = await prisma.tracerNode.deleteMany({
+  const nodes = await prisma.node.deleteMany({
     where: {
       project_id: validated.data.projectId,
     },
