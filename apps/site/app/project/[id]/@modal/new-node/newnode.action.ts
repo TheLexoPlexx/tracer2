@@ -11,6 +11,7 @@ const newNodeSchema = z.object({
   componentId: z.string(),
   x: z.number(),
   y: z.number(),
+  pin: z.number(),
 })
 
 export async function createNode(nodeInput: z.infer<typeof newNodeSchema>): ServerActionResponse<Node> {

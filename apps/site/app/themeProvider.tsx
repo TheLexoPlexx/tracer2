@@ -14,6 +14,9 @@ export function ThemeProviderClient(props: {
     {
       palette: {
       },
+      shape: {
+        borderRadius: 0
+      },
       typography: {
         fontFamily: 'var(--font-roboto)',
       },

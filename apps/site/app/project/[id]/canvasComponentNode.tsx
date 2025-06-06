@@ -1,23 +1,21 @@
 "use client"
 
-import { Paper, Stack, Typography, Divider, Button, TextField, Autocomplete, Drawer, List, ListItem, ListItemText, ListItemButton, Box } from "@mui/material";
-import { CanvasNode } from "./canvas";
-import { AddLink, Launch } from "@mui/icons-material";
+import { Paper, Stack, Typography, Divider, Button, TextField, Autocomplete, Drawer, Box, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { AddLink, Storage } from "@mui/icons-material";
 import { useState, useRef } from "react";
-import { useParams } from "next/navigation";
-import { Configuration } from "@prisma/client";
+import { CanvasConnection } from "@/lib/auxPrismaTypes";
+import { CanvasNode } from "./client.page";
+import { cableColourBackground } from "@/lib/cssHelper";
+import { useProject } from "./projectProvider";
 
 export function CanvasComponentNode(props: {
   node: CanvasNode,
-  configurations: Configuration[]
 }) {
 
-  const { id } = useParams();
-
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [pin, setPin] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { project, configurations, connections } = useProject();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -51,9 +49,9 @@ export function CanvasComponentNode(props: {
           >
             <Stack spacing={2} sx={{ p: 2, width: "768px" }}>
               <Autocomplete
-                options={props.configurations}
+                options={configurations}
                 getOptionLabel={(option) => option.name}
-                defaultValue={props.configurations[0]}
+                defaultValue={configurations[0]}
                 renderInput={(params) => <TextField {...params} label="Konfiguration" />}
               />
               <Stack direction="row" spacing={2}>
@@ -67,15 +65,47 @@ export function CanvasComponentNode(props: {
                     inputRef={inputRef}
                   /> */}
                   <Box sx={{ overflow: "auto", maxHeight: "90vh", width: "100%" }}>
-                    <List disablePadding dense>
-                      {
-                        Array.from({ length: props.node.component.pin_count }, (_, i) => (
-                          <ListItemButton key={i} onClick={() => setPin(i)} dense>
-                            <ListItemText primary={i} />
-                          </ListItemButton>
-                        ))
-                      }
-                    </List>
+                    <Table stickyHeader size="small" sx={{ width: "100%" }}>
+                      <TableHead sx={{ background: "primary" }}>
+                        <TableRow>
+                          <TableCell align="center">Pin</TableCell>
+                          <TableCell align="center">Signal</TableCell>
+                          <TableCell align="center">Pin@Node</TableCell>
+                          <TableCell align="center">Node</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {
+                          Array.from({ length: props.node.component.pin_count }, (_, i) => {
+
+                            const connections_from = connections.filter((connection) => {
+                              return connection.node_from_id === props.node.id && connection.pin_number_from === i;
+                            });
+
+                            const connections_to = connections.filter((connection) => {
+                              return connection.node_to_id === props.node.id && connection.pin_number_to === i;
+                            });
+
+                            if (connections_from.length === 0 && connections_to.length === 0) {
+                              return (
+                                <ConnectionRow key={i} nodeId={props.node.id} projectId={project.id} configurationId={configurations[0].id} pin={i} />
+                              )
+                            } else {
+                              connections_from.map((connection) => {
+                                return (
+                                  <ConnectionRow key={connection.id} nodeId={props.node.id} projectId={project.id} configurationId={connection.configuration_id} connection={connection} pin={i} />
+                                )
+                              })
+                              connections_to.map((connection) => {
+                                return (
+                                  <ConnectionRow key={connection.id} nodeId={props.node.id} projectId={project.id} configurationId={connection.configuration_id} connection={connection} pin={i} />
+                                )
+                              })
+                            }
+                          })
+                        }
+                      </TableBody>
+                    </Table>
                   </Box>
                 </Stack>
                 {/* <Button
@@ -100,4 +130,43 @@ export function CanvasComponentNode(props: {
       </Stack>
     </Paper>
   );
+}
+
+function ConnectionRow(props: {
+  nodeId: string,
+  projectId: string,
+  connection?: CanvasConnection,
+  configurationId?: string,
+  pin: number
+}) {
+
+  if (!props.connection) {
+    return (
+      <TableRow>
+        <TableCell align="center">{props.pin}</TableCell>
+        <TableCell align="center"></TableCell>
+        <TableCell align="center"></TableCell>
+        <TableCell align="center">
+          <Button href={"/project/" + props.projectId + "/new-node?nodeId=" + props.nodeId + "&pin=" + props.pin + "&configurationId=" + props.configurationId + "&connectionId=new"} variant="outlined" color="primary" size="small">
+            <AddLink />
+          </Button>
+        </TableCell>
+      </TableRow>
+    )
+  } else {
+    return (
+      <TableRow
+        sx={{ background: cableColourBackground(props.connection.cable.colour) }}
+        key={props.connection.id}>
+        <TableCell align="center">{props.connection.pin_number_from}</TableCell>
+        <TableCell align="center"></TableCell>
+        <TableCell align="center">?</TableCell>
+        <TableCell align="center">
+          <Button variant="outlined" color="primary" size="small">
+            <Storage />
+          </Button>
+        </TableCell>
+      </TableRow>
+    )
+  }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip, ListItemIcon, InputAdornment, Alert } from "@mui/material";
+import { Dialog, List, ListItem, ListItemButton, ListItemText, Stack, TextField, Chip, ListItemIcon, InputAdornment, Alert, Paper, Typography } from "@mui/material";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { Add, Search, SwapVert } from "@mui/icons-material";
 import { Component } from "@prisma/client";
@@ -20,6 +20,8 @@ export function NewNodeCommandPalette(props: {
 
   const nodeId = searchParams.get("nodeId");
   const pin = searchParams.get("pin");
+  const configurationId = searchParams.get("configurationId");
+  const connectionId = searchParams.get("connectionId");
 
   const router = useRouter();
 
@@ -58,6 +60,7 @@ export function NewNodeCommandPalette(props: {
         componentId: component.id,
         x: 0,
         y: 0,
+        pin: parseInt(pin!)
       });
 
       if (node.data) {
@@ -108,60 +111,76 @@ export function NewNodeCommandPalette(props: {
   };
 
   return (
-    <Dialog open={true} maxWidth="md" fullWidth onClose={() => { router.back() }}>
-      <Stack spacing={2} sx={{ p: 2 }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
-        </Stack>
-        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
-        <TextField
-          fullWidth
-          autoFocus
-          disabled={props.components.length === 0}
-          sx={{ zIndex: 1200 }}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={handleKeyDown}
-          slotProps={
-            {
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                )
+    <Dialog open={true} maxWidth="md" fullWidth onClose={() => { router.back() }} slotProps={{
+      paper: {
+        sx: {
+          backgroundColor: "transparent",
+          boxShadow: "none"
+        }
+      }
+    }}>
+      <Stack spacing={4}>
+        <Paper sx={{ p: 2 }}>
+          <Stack spacing={2}>
+            <Typography variant="h6">Neue Node</Typography>
+          </Stack>
+        </Paper>
+        <Paper sx={{ p: 2 }}>
+          <Stack spacing={2}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Chip icon={<SwapVert />} variant="outlined" size="small" label="zum navigieren" />
+            </Stack>
+            {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+            <TextField
+              fullWidth
+              autoFocus
+              disabled={props.components.length === 0}
+              sx={{ zIndex: 1200 }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
+              slotProps={
+                {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    )
+                  }
+                }
               }
-            }
-          }
-        />
-        <List sx={{ maxHeight: 300, overflow: 'auto' }}>
-          {
-            props.components.length > 0 ?
-              filteredComponents.map((component, index) => (
-                <ListItem
-                  key={component.name}
-                  ref={index === selectedIndex ? selectedItemRef : null}
-                  disablePadding
-                >
-                  <ListItemButton
-                    selected={index === selectedIndex}
-                    onClick={() => handleComponentSelected(component)}
-                  >
-                    <ListItemText primary={component.name} secondary={component.original_part_number} />
-                  </ListItemButton>
-                </ListItem>
-              ))
-              :
-              <ListItem>
-                <ListItemButton href="/components">
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Keine Komponenten gefunden" secondary="Erstellen Sie eine neue Komponente" />
-                </ListItemButton>
-              </ListItem>
-          }
-        </List>
+            />
+            <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+              {
+                props.components.length > 0 ?
+                  filteredComponents.map((component, index) => (
+                    <ListItem
+                      key={component.name}
+                      ref={index === selectedIndex ? selectedItemRef : null}
+                      disablePadding
+                    >
+                      <ListItemButton
+                        selected={index === selectedIndex}
+                        onClick={() => handleComponentSelected(component)}
+                      >
+                        <ListItemText primary={component.name} secondary={component.original_part_number} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))
+                  :
+                  <ListItem>
+                    <ListItemButton href="/components">
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <ListItemText primary="Keine Komponenten gefunden" secondary="Erstellen Sie eine neue Komponente" />
+                    </ListItemButton>
+                  </ListItem>
+              }
+            </List>
+          </Stack>
+        </Paper>
       </Stack>
     </Dialog>
   );

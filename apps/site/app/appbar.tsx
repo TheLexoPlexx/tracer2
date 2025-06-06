@@ -17,7 +17,7 @@ export function Appbar() {
   //Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/2
 
   return (
-    <AppBar position="fixed" sx={{}}>
+    <AppBar position="fixed">
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={2} sx={{ ml: 1, zIndex: (theme) => theme.zIndex.appBar + iconElevation }}>
           {

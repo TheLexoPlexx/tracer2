@@ -1,10 +1,9 @@
 "use client"
 
 import { useAppbar, AppbarActionPosition } from "@/hooks/useAppbar";
-import { Add, Settings, Tune } from "@mui/icons-material";
+import { Add, Settings } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
-import { Component, Configuration, Project, Node } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
 import Link from "next/link";
@@ -12,16 +11,13 @@ import { useCommandPalette } from "@/hooks/useCommandPalette";
 import { newNodeCommand } from "@/lib/commands";
 import { CanvasNode } from "./canvasNode";
 import { CanvasComponentNode } from "./canvasComponentNode";
+import { useProject, CanvasNode as CanvasNodeType } from "./projectProvider";
 
-export type CanvasNode = Node & {
-  component: Component
-}
+export type CanvasNode = CanvasNodeType
 
-export function Canvas(props: {
-  project: Project,
-  nodes: CanvasNode[],
-  configurations: Configuration[]
-}) {
+export function ClientPage() {
+
+  const { project, nodes, configurations, connections } = useProject();
 
   const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
   const { addCommands, removeCommand } = useCommandPalette();
@@ -32,7 +28,7 @@ export function Canvas(props: {
         id: "project-settings",
         icon: <Tooltip title="Einstellungen"><Settings sx={{ color: 'white' }} /></Tooltip>,
         position: AppbarActionPosition.RIGHT,
-        href: "/project/" + props.project.id + "/settings"
+        href: "/project/" + project.id + "/settings"
       }
     );
 
@@ -65,30 +61,25 @@ export function Canvas(props: {
     >
       <Box sx={{ overflow: "visible", position: "relative", positionStyle: { top: 0, left: 0 } }}>
         {
-          props.nodes.length > 0 ?
-            props.nodes.map((node) => (
-              <Box key={node.id + "box"}>
-                <CanvasNode key={node.id + "1"} x={node.x} y={node.y}>
-                  <CanvasComponentNode node={node} configurations={props.configurations} />
-                </CanvasNode>
-                {/* <CanvasNode key={node.id + "2"} x={node.x + 300} y={node.y}>
-                  <CanvasComponentNode node={node} />
-                </CanvasNode>
-                <CanvasNode key={node.id + "3"} x={node.x} y={node.y + 300}>
-                  <CanvasComponentNode node={node} />
-                </CanvasNode>
-                <CanvasNode key={node.id + "4"} x={node.x - 300} y={node.y}>
-                  <CanvasComponentNode node={node} />
-                </CanvasNode>
-                <CanvasNode key={node.id + "5"} x={node.x} y={node.y - 300}>
-                  <CanvasComponentNode node={node} />
-                </CanvasNode> */}
-              </Box>
-            ))
+          nodes.length > 0 ?
+            nodes.map((node) => {
+
+              const nodeConnections = connections.filter((connection) => {
+                return connection.node_from_id === node.id || connection.node_to_id === node.id;
+              })
+
+              return (
+                <Box key={node.id + "box"}>
+                  <CanvasNode key={node.id + "1"} x={node.x} y={node.y}>
+                    <CanvasComponentNode node={node} />
+                  </CanvasNode>
+                </Box>
+              )
+            })
             :
             <CanvasNode x={0} y={0}>
               <Tooltip title="Erste Node hinzufügen">
-                <Button variant="contained" color="primary" component={Link} href={"/project/" + props.project.id + newNodeCommand.pathname}>
+                <Button variant="contained" color="primary" component={Link} href={"/project/" + project.id + newNodeCommand.pathname}>
                   <Add />
                 </Button>
               </Tooltip>

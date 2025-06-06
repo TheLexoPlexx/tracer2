@@ -1,7 +1,7 @@
-import { AlertTitle, Alert, Box, Container, Stack } from "@mui/material";
-import { Canvas } from "./canvas";
+import { AlertTitle, Alert, Box, Container } from "@mui/material";
+import { ClientPage } from "./client.page";
 import prisma from "@/lib/prismadb"
-import { PageButtonGroup } from "./buttonGroup";
+import { ProjectProvider } from "./projectProvider";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
 
@@ -23,41 +23,67 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     )
   }
 
-  const nodes = await prisma.node.findMany({
-    where: {
-      project_id: id
-    },
-    include: {
-      component: true
-    }
-  });
-
-  const configurations = await prisma.configuration.findMany({
-    where: {
-      project_id: id
-    }
-  });
+  const [
+    nodes,
+    configurations,
+    connections
+  ] = await Promise.all([
+    prisma.node.findMany({
+      where: {
+        project_id: id
+      },
+      include: {
+        component: true
+      }
+    }),
+    prisma.configuration.findMany({
+      where: {
+        project_id: id
+      },
+      orderBy: {
+        default: "asc" // this "should" put the one default configuration first
+      }
+    }),
+    prisma.connection.findMany({
+      where: {
+        OR: [
+          {
+            node_from: {
+              project_id: id
+            }
+          },
+          {
+            node_to: {
+              project_id: id
+            }
+          }
+        ]
+      },
+      include: {
+        cable: {
+          include: {
+            colour: true,
+            loom: true,
+            signal_type: true
+          }
+        },
+        configuration: true,
+        node_from: true,
+        node_to: true
+      }
+    })
+  ]);
 
   return (
-    <>
-      <Stack sx={{
-        position: 'absolute',
-        top: '100px',
-        left: "0",
-        right: "0",
-        margin: '0 auto',
-        width: '100%',
-        zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <PageButtonGroup id={id} />
-      </Stack>
-
-      <Box sx={{ width: "100%", height: "100%" }}>
-        <Canvas project={project} nodes={nodes} configurations={configurations} />
-      </Box>
-    </>
+    <Box sx={{ width: "100%", height: "100%" }}>
+      <ProjectProvider
+        project={project}
+        nodes={nodes}
+        configurations={configurations}
+        connections={connections}
+      >
+        <ClientPage />
+      </ProjectProvider>
+    </Box>
   );
 }
