@@ -34,6 +34,7 @@ export function DeleteProject(props: {
         if (response.error) {
           setErrorMsg(response.error);
         } else {
+          // TODO: Why does this error out?
           router.push("/");
         }
       }}>

@@ -26,7 +26,7 @@ export function AppbarContent(props: {
         {props.leftChildren ?? undefined}
       </Stack>
       <Toolbar>
-        <Paper sx={{ width: "30rem", outline: `1px solid ${borderColor}`, p: 0.5, backgroundColor: "transparent", cursor: "pointer" }} onClick={() => setOpen(true)}>
+        <Paper sx={{ width: "40rem", outline: `1px solid ${borderColor}`, p: 0.5, backgroundColor: "transparent", cursor: "pointer" }} onClick={() => setOpen(true)}>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Search />
             <Typography variant="subtitle1" sx={{ fontWeight: "bold", fontStyle: "italic" }}>{pathname}</Typography>

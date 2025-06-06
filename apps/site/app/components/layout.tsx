@@ -1,38 +1,26 @@
-import { ReactNode } from "react";
-import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import prisma from "@/lib/prismadb";
+import { IconButton, Link } from "@mui/material"
 
-export default async function Layout(props: {
+import { AppbarLayout } from "@/components/appbar/appbarLayout"
+import { AppbarContent } from "@/components/appbar/appbarContent"
+import { Home } from "@mui/icons-material"
+import { ComponentEditorLayout } from "@/components/componentEditor/componentEditor.layout"
+import { ReactNode } from "react"
+
+export default function Layout(props: {
   children: ReactNode
 }) {
 
-  const components = await prisma.component.findMany();
+  const left = (
+    <IconButton component={Link} href="/" sx={{ color: "white" }}>
+      <Home />
+    </IconButton>
+  )
 
   return (
-    <Stack direction="row">
-      <Container sx={{ maxHeight: "100vh", overflow: "auto" }} disableGutters>
-        <List disablePadding>
-          <ListItem disablePadding>
-            <ListItemButton href="/components/new">
-              <ListItemIcon>
-                <Add />
-              </ListItemIcon>
-              <ListItemText primary="Neue Komponente" />
-            </ListItemButton>
-          </ListItem>
-          {
-            components.map((component) => (
-              <ListItem disablePadding key={component.id}>
-                <ListItemButton href={`/components/${component.id}`}>
-                  <ListItemText primary={component.name} />
-                </ListItemButton>
-              </ListItem>
-            ))
-          }
-        </List>
-      </Container>
-      {props.children}
-    </Stack>
+    <AppbarLayout appbar={<AppbarContent leftChildren={left} />}>
+      <ComponentEditorLayout>
+        {props.children}
+      </ComponentEditorLayout>
+    </AppbarLayout>
   )
 }

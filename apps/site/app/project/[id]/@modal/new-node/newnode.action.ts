@@ -10,8 +10,7 @@ const newNodeSchema = z.object({
   projectId: z.string(),
   componentId: z.string(),
   x: z.number(),
-  y: z.number(),
-  pin: z.number(),
+  y: z.number()
 })
 
 export async function createNode(nodeInput: z.infer<typeof newNodeSchema>): ServerActionResponse<Node> {

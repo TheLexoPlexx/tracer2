@@ -60,7 +60,7 @@ export function NewNodeCommandPalette(props: {
         componentId: component.id,
         x: 0,
         y: 0,
-        pin: parseInt(pin!)
+        // pin: parseInt(pin!)
       });
 
       if (node.data) {
