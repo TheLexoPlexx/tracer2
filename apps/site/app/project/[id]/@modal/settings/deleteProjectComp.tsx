@@ -35,6 +35,7 @@ export function DeleteProject(props: {
           setErrorMsg(response.error);
         } else {
           // TODO: Why does this error out?
+          // Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/7
           router.push("/");
         }
       }}>
