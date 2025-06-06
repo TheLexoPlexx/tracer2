@@ -147,7 +147,8 @@ function ConnectionRow(props: {
         <TableCell align="center"></TableCell>
         <TableCell align="center"></TableCell>
         <TableCell align="center">
-          <Button href={"/project/" + props.projectId + "/new-node?nodeId=" + props.nodeId + "&pin=" + props.pin + "&configurationId=" + props.configurationId + "&connectionId=new"} variant="outlined" color="primary" size="small">
+          <Button href={"/project/" + props.projectId + "/new-node"} variant="outlined" color="primary" size="small">
+            {/* <Button href={"/project/" + props.projectId + "/new-node?nodeId=" + props.nodeId + "&pin=" + props.pin + "&configurationId=" + props.configurationId + "&connectionId=new"} variant="outlined" color="primary" size="small"> */}
             <AddLink />
           </Button>
         </TableCell>

@@ -7,7 +7,7 @@ import 'dayjs/locale/de';
 
 export function ThemeProviderClient(props: {
   children: ReactNode,
-  font: String
+  font: string
 }) {
 
   const theme = createTheme(

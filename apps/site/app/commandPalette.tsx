@@ -28,7 +28,7 @@ export function CommandPalette() {
     if (cp.commands.length === 0) {
       cp.setCommands(Object.values(commands));
     }
-  }, [cp.setCommands, cp.commands.length]);
+  }, [cp]);
 
   // Effect to reset selection when filteredCommands change (e.g., due to search)
   useEffect(() => {
@@ -37,7 +37,7 @@ export function CommandPalette() {
     } else {
       setSelectedCommandIndex(-1);
     }
-  }, [filteredCommands]);
+  }, [cp, filteredCommands]);
 
   // Effect to handle dialog open/close state
   useEffect(() => {
@@ -49,7 +49,7 @@ export function CommandPalette() {
       setSearch(""); // Clear search
       setSelectedCommandIndex(-1); // Reset selection
     }
-  }, [cp.open]);
+  }, [cp]);
 
   // Effect to scroll selected item into view
   useEffect(() => {

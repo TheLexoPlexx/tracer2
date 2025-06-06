@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Project, Node, Component, Configuration, Connection, Cable, Colour, Loom, SignalType } from "@prisma/client";
+import { Project, Node, Component, Configuration } from "@prisma/client";
 import { CanvasConnection } from "@/lib/auxPrismaTypes";
 
 export type CanvasNode = Node & {

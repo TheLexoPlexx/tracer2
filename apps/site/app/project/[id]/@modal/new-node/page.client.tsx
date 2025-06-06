@@ -20,8 +20,8 @@ export function NewNodeCommandPalette(props: {
 
   const nodeId = searchParams.get("nodeId");
   const pin = searchParams.get("pin");
-  const configurationId = searchParams.get("configurationId");
-  const connectionId = searchParams.get("connectionId");
+  // const configurationId = searchParams.get("configurationId");
+  // const connectionId = searchParams.get("connectionId");
 
   const router = useRouter();
 

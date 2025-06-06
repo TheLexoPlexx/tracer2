@@ -1,16 +1,11 @@
 import { ReactNode } from "react";
-import { ClientLayout } from "./clientLayout";
 import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import prisma from "@/lib/prismadb";
-export default async function Layout(props: {
-  children: ReactNode,
-  params: Promise<{
-    id: string
-  }>
-}) {
 
-  const { id } = await props.params;
+export default async function Layout(props: {
+  children: ReactNode
+}) {
 
   const components = await prisma.component.findMany();
 
@@ -37,9 +32,7 @@ export default async function Layout(props: {
           }
         </List>
       </Container>
-      <ClientLayout id={id}>
-        {props.children}
-      </ClientLayout>
+      {props.children}
     </Stack>
   )
 }

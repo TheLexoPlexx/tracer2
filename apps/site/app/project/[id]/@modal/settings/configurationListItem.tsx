@@ -111,6 +111,7 @@ export function ConfigurationListItem(props: {
               <Button
                 variant="contained"
                 size="small"
+                loading={loading}
                 sx={{
                   width: "fit-content"
                 }}
@@ -152,6 +153,7 @@ export function ConfigurationListItem(props: {
                     variant="contained"
                     size="small"
                     color="error"
+                    loading={loading}
                     sx={{
                       width: "fit-content"
                     }}

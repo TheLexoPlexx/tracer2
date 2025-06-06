@@ -15,7 +15,7 @@ export type CanvasNode = CanvasNodeType
 
 export function ClientPage() {
 
-  const { project, nodes, configurations, connections } = useProject();
+  const { project, nodes } = useProject();
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 
@@ -40,9 +40,9 @@ export function ClientPage() {
           nodes.length > 0 ?
             nodes.map((node) => {
 
-              const nodeConnections = connections.filter((connection) => {
-                return connection.node_from_id === node.id || connection.node_to_id === node.id;
-              })
+              // const nodeConnections = connections.filter((connection) => {
+              //   return connection.node_from_id === node.id || connection.node_to_id === node.id;
+              // })
 
               return (
                 <Box key={node.id + "frame"}>
