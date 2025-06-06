@@ -1,13 +1,11 @@
 "use client"
 
-import { useAppbar, AppbarActionPosition } from "@/hooks/useAppbar";
-import { Add, Settings } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ReactInfiniteCanvas, ReactInfiniteCanvasHandle } from "ws/infinite-canvas/src/main"
 import Link from "next/link";
-import { useCommandPalette } from "@/hooks/useCommandPalette";
 import { newNodeCommand } from "@/lib/commands";
 import { CanvasNode } from "./canvasNode";
 import { CanvasComponentNode } from "./canvasComponentNode";
@@ -18,28 +16,6 @@ export type CanvasNode = CanvasNodeType
 export function ClientPage() {
 
   const { project, nodes, configurations, connections } = useProject();
-
-  const { setAppbarTitle, addAppbarAction, clearAppbarActions } = useAppbar();
-  const { addCommands, removeCommand } = useCommandPalette();
-
-  useEffect(() => {
-    addAppbarAction(
-      {
-        id: "project-settings",
-        icon: <Tooltip title="Einstellungen"><Settings sx={{ color: 'white' }} /></Tooltip>,
-        position: AppbarActionPosition.RIGHT,
-        href: "/project/" + project.id + "/settings"
-      }
-    );
-
-    addCommands([newNodeCommand]);
-
-    return () => {
-      clearAppbarActions();
-      setAppbarTitle();
-      removeCommand(newNodeCommand.name);
-    };
-  }, [clearAppbarActions, removeCommand]);
 
   const canvasRef = useRef<ReactInfiniteCanvasHandle>(null);
 
@@ -69,8 +45,8 @@ export function ClientPage() {
               })
 
               return (
-                <Box key={node.id + "box"}>
-                  <CanvasNode key={node.id + "1"} x={node.x} y={node.y}>
+                <Box key={node.id + "frame"}>
+                  <CanvasNode key={node.id + "node"} x={node.x} y={node.y}>
                     <CanvasComponentNode node={node} />
                   </CanvasNode>
                 </Box>

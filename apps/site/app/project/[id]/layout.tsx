@@ -1,5 +1,9 @@
+import { AppbarContent } from "@/components/appbar/appbarContent";
+import { AppbarLayout } from "@/components/appbar/appbarLayout";
+import { ArrowBack, Settings } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import Link from "next/link";
 import { ReactNode } from "react";
-import { ClientLayout } from "./client.layout";
 
 export default async function Layout(props: {
   children: ReactNode,
@@ -9,10 +13,24 @@ export default async function Layout(props: {
   }>
 }) {
 
+  const { id } = await props.params;
+
+  const leftChildren = (
+    <IconButton component={Link} href="/" sx={{ color: "white" }}>
+      <ArrowBack />
+    </IconButton>
+  );
+
+  const rightChildren = (
+    <IconButton component={Link} href={`/project/${id}/settings`} sx={{ color: "white" }}>
+      <Settings />
+    </IconButton>
+  );
+
   return (
-    <ClientLayout>
+    <AppbarLayout appbar={<AppbarContent leftChildren={leftChildren} rightChildren={rightChildren} />}>
       {props.children}
       {props.modal}
-    </ClientLayout>
+    </AppbarLayout>
   )
 }
