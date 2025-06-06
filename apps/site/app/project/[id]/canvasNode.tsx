@@ -12,6 +12,7 @@ export function CanvasNode(props: { children: ReactNode, x: number, y: number })
   const y = props.y + ZOOM_CONFIGS.DEFAULT_LAYOUT / 2;
 
   //TODO: add drag and drop
+  //Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/5
 
   return (
     <div

@@ -66,6 +66,7 @@ export function NewNodeCommandPalette(props: {
       if (node.data) {
         router.push(`/project/${props.projectId}`);
         //TODO: Doesn´t close the modal
+        //Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/4
       } else {
         setErrorMsg(node.error);
       }
