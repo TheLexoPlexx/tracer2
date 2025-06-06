@@ -13,6 +13,7 @@ export function AppbarContent(props: {
 
   const iconElevation = 10;
   // TODO: this looks ugly, find a better way to do this
+  // Issue URL: https://github.com/TheLexoPlexx/tracer2/issues/6
   const borderColor = "#333";
 
   const { setOpen } = useCommandPalette();
